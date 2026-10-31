@@ -1,0 +1,5 @@
+.DS_Store
+# Taste skill working files (screenshots, draws)
+.taste-skill/
+__pycache__/
+*.pyc

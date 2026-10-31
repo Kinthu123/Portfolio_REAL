@@ -1,0 +1,59 @@
+diff -ru -x d .claude/skills/banner-design/SKILL.md .claude/skills/banner-design/SKILL.md
+--- .claude/skills/banner-design/SKILL.md	2026-10-31 15:47:42
++++ .claude/skills/banner-design/SKILL.md	2026-10-31 15:48:07
+@@ -10,6 +10,9 @@
+ 
+ # Banner Design - Multi-Format Creative Banner System
+ 
++> **In this project** some referenced skills are not installed; substitute them throughout:
++> `frontend-design` → `design-taste-frontend` · `chrome-devtools` screenshots → headless Chrome (`"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --screenshot=<out.png> --window-size=<w>,<h> --force-device-scale-factor=2 <file.html>`) or the Chrome MCP · `ai-artist` / `ai-multimodal` (prompt search, Gemini generation) → not installed: use real images from `design-taste-frontend/scripts/assets.mjs`, or ask before adding an image-generation skill.
++
+ Design banners across social, ads, web, and print formats. Generates multiple art direction options per request with AI-powered visual elements. This skill handles banner design only. Does NOT handle video editing, full website design, or print production.
+ 
+ ## When to Activate
+diff -ru -x d .claude/skills/design/SKILL.md .claude/skills/design/SKILL.md
+--- .claude/skills/design/SKILL.md	2026-10-31 15:47:42
++++ .claude/skills/design/SKILL.md	2026-10-31 15:48:06
+@@ -10,6 +10,9 @@
+ 
+ # Design
+ 
++> **In this project** some referenced skills are not installed; substitute them here and in every `references/` file:
++> `frontend-design` → `design-taste-frontend` · `/ck:` and `/ckm:` prefixes → the plain skill name (`ui-ux-pro-max`, `brand`, `design-system`) · `chrome-devtools` → headless Chrome (`"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --screenshot=<out.png> --window-size=<w>,<h> --force-device-scale-factor=2 <file.html>`) or the Chrome MCP · `ai-artist` / `ai-multimodal` → not installed: use real images from `design-taste-frontend/scripts/assets.mjs`, or ask before adding an image-generation skill.
++
+ Unified design skill: brand, tokens, UI, logo, CIP, slides, banners, social photos, icons.
+ 
+ ## When to Use
+diff -ru -x d .claude/skills/develop/ui/generate.md .claude/skills/develop/ui/generate.md
+--- .claude/skills/develop/ui/generate.md	2026-10-31 15:47:42
++++ .claude/skills/develop/ui/generate.md	2026-10-31 15:47:55
+@@ -4,7 +4,7 @@
+ 
+ This is case 4 from the guide: nothing was provided, so you establish the design system, then build to the bar. Design first, integrate second.
+ 
+-**Prefer a proven design skill when one is available** (Anthropic's `frontend-design` on Claude Code, Codex's frontend skill, or a design MCP): it sets the visual direction with the same craft that makes the chat app's output good. With none available, derive the system from B2. Either way the token values land in the project's styling/theme system and the art direction lands in `design.md`.
++**Prefer a proven design skill when one is available** (in this project `design-taste-frontend`, Taste, sector `personal-portfolio`: run its draw, record the chosen direction, type, palette and section blueprints in `design.md` with `source: skill:design-taste-frontend`, and use its `inspect.mjs` look-and-fix loop before Phase 6; else Anthropic's `frontend-design` on Claude Code, Codex's frontend skill, or a design MCP): it sets the visual direction with the same craft that makes the chat app's output good. With none available, derive the system from B2. Either way the token values land in the project's styling/theme system and the art direction lands in `design.md`.
+ 
+ There are no bundled brand templates. You do not copy a design system, you derive one and prove it holds up.
+ 
+@@ -83,7 +83,7 @@
+ ```yaml
+ ---
+ name: <style>-design-system
+-source: derived              # or url:<url> | skill:frontend-design
++source: derived              # or url:<url> | skill:design-taste-frontend | skill:frontend-design
+ character: "<2 to 3 sentences: the visual personality and mood>"
+ tokens: "real values live in the project's styling/theme system; read them there, never duplicated here"
+ contrast: "<the ratios you verified, e.g. body 7.1:1 light / 8.4:1 dark; on accent 5.2:1>"
+diff -ru -x d .claude/skills/develop/ui-guide.md .claude/skills/develop/ui-guide.md
+--- .claude/skills/develop/ui-guide.md	2026-10-31 15:47:42
++++ .claude/skills/develop/ui-guide.md	2026-10-31 15:47:53
+@@ -25,7 +25,7 @@
+ 1. **Figma connected (the spec says use it)** → pull the real design from Figma, build to the frames. Route: `ui/mcp.md`.
+ 2. **Image provided (pasted in chat, not a repo file)** → replicate it pixel perfect. The image is both the look and the composition, so match it faithfully and do NOT embellish beyond it. Tokenize what you see (values into CSS, character into `design.md`) and derive the responsive and accessible behavior a single screenshot cannot show. Route: `ui/image.md`.
+ 3. **A design system already exists** (`design.md` + tokens in CSS) → design the new page WITHIN that system, at the bar above: a full professional surface, consistent with what is already shipped. Route: `ui/existing.md`.
+-4. **Nothing provided** → establish the design system first (the `frontend-design` skill when available, else derive it from the rules in `ui/generate.md` B2 and verify its contrast), record it in `design.md` (character + mandate + pointers) with the tokens written to CSS, then build to the bar above, maximalist and complete. Route: `ui/generate.md`.
++4. **Nothing provided** → establish the design system first (the `design-taste-frontend` skill, Taste, in this project; else `frontend-design` when available; else derive it from the rules in `ui/generate.md` B2 and verify its contrast), record it in `design.md` (character + mandate + pointers) with the tokens written to CSS, then build to the bar above, maximalist and complete. Route: `ui/generate.md`.
+ 
+ Cases 3 and 4 get the full chat app treatment (bold, complete, product level); case 2 gets faithful fidelity; case 1 gets Figma fidelity. Follow the source the spec recorded.
+ 
