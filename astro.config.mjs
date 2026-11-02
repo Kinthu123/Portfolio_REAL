@@ -9,7 +9,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   // Production URL, used for canonical links and the sitemap (spec 0001).
   // TODO: confirm the account subdomain (Cloudflare dashboard > Workers & Pages).
-  site: 'https://tyson-portfolio.kinthu123.workers.dev',
+  site: 'https://portfolio-real.kinthu123.workers.dev',
   trailingSlash: 'always',
   build: {
     format: 'directory',
