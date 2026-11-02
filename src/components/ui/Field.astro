@@ -1,0 +1,84 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Labelled single or multi line field (spec 0002, AC-7). Hint and error are tied to the control.
+type Props = Omit<HTMLAttributes<'input'>, 'id' | 'name'> & {
+  label: string;
+  name: string;
+  id?: string;
+  multiline?: boolean;
+  rows?: number;
+  hint?: string;
+  error?: string;
+};
+
+const { label, name, id = `field-${name}`, multiline = false, rows = 5, hint, error, type = 'text', class: className, ...rest } = Astro.props;
+
+const hintId = hint ? `${id}-hint` : undefined;
+const errorId = error ? `${id}-error` : undefined;
+const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
+
+const control = {
+  id,
+  name,
+  'aria-describedby': describedBy,
+  'aria-invalid': error ? ('true' as const) : undefined,
+};
+---
+
+<div class:list={['field flex flex-col', className]} data-invalid={error ? '' : undefined}>
+  <label for={id} class="text-body font-semibold">{label}</label>
+  {hint && <p id={hintId} class="mt-1 text-small text-muted">{hint}</p>}
+  {
+    multiline ? (
+      <textarea class="field-control w-full px-4 py-3 text-body" {...control} rows={rows} {...(rest as HTMLAttributes<'textarea'>)} />
+    ) : (
+      <input class="field-control w-full px-4 py-3 text-body" type={type} {...control} {...rest} />
+    )
+  }
+  {error && <p id={errorId} class="mt-2 text-small font-semibold text-error">{error}</p>}
+</div>
+
+<style>
+  .field-control {
+    margin-top: calc(var(--spacing) * 2);
+    min-height: calc(var(--spacing) * 11);
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    border: 0;
+    /* The bottom line makes the field findable on bg (the fill alone is too faint). */
+    border-bottom: var(--size-ledge) solid var(--color-muted);
+    transition:
+      border-color var(--duration-feedback) var(--ease-page),
+      box-shadow var(--duration-feedback) var(--ease-page);
+  }
+
+  textarea.field-control {
+    resize: vertical;
+  }
+
+  .field-control::placeholder {
+    color: var(--color-muted);
+  }
+
+  .field-control:hover {
+    border-bottom-color: var(--color-ink);
+  }
+
+  /* Focus: a 2px ring inside the field replaces the page focus outline. */
+  .field-control:focus-visible {
+    outline: none;
+    border-bottom-color: var(--color-ring);
+    box-shadow: inset 0 0 0 var(--size-ledge) var(--color-ring);
+  }
+
+  .field[data-invalid] .field-control {
+    border-bottom-color: var(--color-error);
+    box-shadow: inset 0 0 0 var(--size-ledge) var(--color-error);
+  }
+
+  /* Focus on a field with an error: the error ring doubles in width. */
+  .field[data-invalid] .field-control:focus-visible {
+    box-shadow: inset 0 0 0 calc(var(--size-ledge) * 2) var(--color-error);
+  }
+</style>

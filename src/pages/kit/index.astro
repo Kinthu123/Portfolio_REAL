@@ -1,5 +1,6 @@
 ---
 import Button from '../../components/ui/Button.astro';
+import Field from '../../components/ui/Field.astro';
 import Link from '../../components/ui/Link.astro';
 import ThemeToggle from '../../components/ui/ThemeToggle.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -73,6 +74,26 @@ const colours = [
             <p class="mt-4 text-body">
               <Link href="#" arrow>Read the case study</Link>
             </p>
+
+            <h3 class="mt-12 text-lead">Fields</h3>
+            <div class="mt-6 flex max-w-measure flex-col gap-8">
+              <Field label="Your name" name={`name-${theme}`} autocomplete="name" />
+              <Field
+                label="Email"
+                name={`email-${theme}`}
+                type="email"
+                autocomplete="email"
+                hint="I reply within two working days."
+                value="tyson@"
+                error="Enter an email address like name@example.com."
+              />
+              <Field
+                label="What are you working on?"
+                name={`message-${theme}`}
+                multiline
+                hint="A few lines is plenty."
+              />
+            </div>
 
             <h3 class="mt-12 text-lead">Colour</h3>
             <ul class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3" role="list">
