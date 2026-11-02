@@ -1,1 +1,138 @@
 @import "tailwindcss";
+
+/* Design tokens (spec 0002). Components use these only: no raw colours, font names, or durations. */
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@theme static {
+  /* Drop Tailwind's defaults so only the tokens below exist. */
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  /* Square corners everywhere: no radius tokens on purpose. */
+  --radius-*: initial;
+
+  /* Colour, light (dark overrides below) */
+  --color-bg: #ffffff;
+  --color-surface: #f4f4f2;
+  --color-ink: #1f2b4d;
+  --color-muted: #5c6378;
+  --color-accent: #f7941d;
+  --color-accent-ink: #1f2b4d;
+  --color-stage: #05070a;
+  --color-stage-ink: #ffffff;
+  --color-field-close: #e3e1dc;
+  --color-error: #b42318;
+  --color-focus: #1f2b4d;
+  --color-ring: #1f2b4d;
+
+  /* Families (the --font-young-serif etc. variables come from Astro's Fonts API) */
+  --font-display: var(--font-young-serif);
+  --font-text: var(--font-source-serif);
+  --font-myanmar: var(--font-noto-myanmar);
+
+  /* Five type steps, no sixth */
+  --text-small: clamp(0.8125rem, 0.79rem + 0.1vw, 0.875rem);
+  --text-small--line-height: 1.55;
+  --text-body: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+  --text-body--line-height: 1.55;
+  --text-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
+  --text-lead--line-height: 1.55;
+  --text-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
+  --text-head--line-height: 0.95;
+  --text-head--letter-spacing: -0.02em;
+  --text-display: clamp(3.5rem, 9vw, 12.5rem);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.02em;
+
+  /* Spacing: the 4px base gives 1, 2, 3, 4, 6, 8, 12, 18, 30, 50 for 4 to 200px */
+  --spacing: 4px;
+  --spacing-page: clamp(20px, 3vw, 32px);
+  --spacing-section: clamp(96px, 14vw, 200px);
+  --spacing-column: clamp(48px, 5vw, 72px);
+  --container-measure: 46ch;
+
+  /* Motion */
+  --ease-page: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-feedback: 160ms;
+  --duration-enter: 520ms;
+  --duration-stagger: 70ms;
+  --distance-rise: 24px;
+  --distance-lift: 2px;
+  --distance-nudge: 4px;
+}
+
+/* Any element, not just <html>, so /kit/ can show both themes side by side. */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #111a33;
+  --color-surface: #18233f;
+  --color-ink: #eef0f6;
+  --color-muted: #a3abc2;
+  --color-stage: #070b16;
+  --color-stage-ink: #eef0f6;
+  --color-field-close: #18233f;
+  --color-error: #ff8a7a;
+  --color-focus: #f7941d;
+  --color-ring: #f7941d;
+}
+
+/* Restores light inside a dark page (the /kit/ light panel). Keep in step with @theme above. */
+[data-theme="dark"] [data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #ffffff;
+  --color-surface: #f4f4f2;
+  --color-ink: #1f2b4d;
+  --color-muted: #5c6378;
+  --color-stage: #05070a;
+  --color-stage-ink: #ffffff;
+  --color-field-close: #e3e1dc;
+  --color-error: #b42318;
+  --color-focus: #1f2b4d;
+  --color-ring: #1f2b4d;
+}
+
+/* Reduced motion: movement distances drop to zero, colour transitions stay. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --distance-rise: 0px;
+    --distance-lift: 0px;
+    --distance-nudge: 0px;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-text);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-wrap: balance;
+  }
+
+  /* The Myanmar face renders Myanmar script only. */
+  :lang(my) {
+    font-family: var(--font-myanmar);
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+}

@@ -54,7 +54,7 @@ The visual language, set from your references with the Taste skill, plus base co
 spec [0002](../specs/0002-design-system/index.md)
 - [x] Design it (spec): `/architect design system & UI foundation`
 - [ ] Build it: `/develop design system & UI foundation`
-  - [ ] Fonts and tokens, light and dark, reduced motion (AC-2, AC-3, AC-4, AC-11, AC-12)
+  - [x] Fonts and tokens, light and dark, reduced motion (AC-2, AC-3, AC-4, AC-11, AC-12)
   - [ ] Base pieces: buttons, links, fields, Design / Code switch, theme toggle, project cards (AC-5 to AC-10)
   - [ ] `/kit/` page, `design.md`, Taste inspection at three widths (AC-1, AC-4, AC-13)
 

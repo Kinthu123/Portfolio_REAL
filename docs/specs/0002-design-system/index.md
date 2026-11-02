@@ -1,7 +1,7 @@
 # 0002. Design system: split stage, navy on white
 
 **Date**: 2026-11-02
-**Status**: Accepted
+**Status**: In Progress
 
 ## Summary
 
@@ -62,7 +62,7 @@ Reasoning and options: see [rationale.md](rationale.md).
 | `bg` | `#ffffff` | `#111a33` | page ground, reading column |
 | `surface` | `#f4f4f2` | `#18233f` | a tone step for panels and fields |
 | `ink` | `#1f2b4d` | `#eef0f6` | all running text, headings |
-| `muted` | `#646b80` | `#a3abc2` | secondary notes only |
+| `muted` | `#5c6378` | `#a3abc2` | secondary notes only (darkened from `#646b80` in the build to pass AA on `field-close`) |
 | `accent` | `#f7941d` | `#f7941d` | the main button and one other thing per screen |
 | `accent-ink` | `#1f2b4d` | `#1f2b4d` | text on accent |
 | `stage` | `#05070a` | `#070b16` | default stage field (before a project colour takes over) |
