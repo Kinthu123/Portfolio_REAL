@@ -1,7 +1,7 @@
 # 0001. Build the portfolio on Astro 7 with Cloudflare Workers
 
 **Date**: 2026-11-02
-**Status**: Proposed
+**Status**: Accepted
 
 ## Summary
 

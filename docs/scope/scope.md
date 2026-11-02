@@ -11,7 +11,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
-| 1 | Stack & architecture | Foundation | in-progress |
+| 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | planned |
 | 3 | Content model | Foundation | planned |
 | 4 | Design system & UI foundation | Foundation | planned |
@@ -34,9 +34,9 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 ### 1. Stack & architecture
 Decide the stack for a fast, content driven site (pages built from content files, a working contact form, analytics, light and dark themes, hosting), then scaffold a runnable project.
 **Done when:** the stack is recorded in a spec and the empty scaffold runs locally and passes a build.
-spec [0001](../specs/0001-portfolio-stack/index.md)
+spec [0001](../specs/0001-portfolio-stack/index.md) · code in `astro.config.mjs`, `wrangler.jsonc`, `src/`
 - [x] Decide the stack (spec): `/architect stack & architecture`
-- [ ] Scaffold from the decision: `/develop stack & architecture`
+- [x] Scaffold from the decision: `/develop stack & architecture`
 
 ### 2. Coding standards & tooling
 Capture conventions from the real scaffolded project, then install lint, format, and type checks so every later page follows them.
