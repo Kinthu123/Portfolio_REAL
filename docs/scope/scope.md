@@ -14,7 +14,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | planned |
 | 3 | Content model | Foundation | planned |
-| 4 | Design system & UI foundation | Foundation | planned |
+| 4 | Design system & UI foundation | Foundation | in-progress |
 | 5 | Site shell | Skeleton | planned |
 | 6 | Home page | Journey 1 | planned |
 | 7 | POS + warehouse case study | Journey 1 | planned |
@@ -48,10 +48,15 @@ The shape of every content file: case study, playground piece, certificate, serv
 **Done when:** each content type has defined fields, a sample file of each renders without errors, and a missing required field fails the build instead of showing a broken page.
 - [ ] Design it (spec): `/architect content model`
 
-### 4. Design system & UI foundation · needs a decision
+### 4. Design system & UI foundation
 The visual language, set from your references with the Taste skill, plus base components. Light and dark themes, built to WCAG AA from the start.
 **Done when:** `design.md` records the chosen direction, tokens cover type, color (light and dark), spacing, and motion, and base components (buttons, links, cards, form fields) pass AA contrast and work by keyboard.
-- [ ] Design it (spec): `/architect design system & UI foundation`
+spec [0002](../specs/0002-design-system/index.md)
+- [x] Design it (spec): `/architect design system & UI foundation`
+- [ ] Build it: `/develop design system & UI foundation`
+  - [ ] Fonts and tokens, light and dark, reduced motion (AC-2, AC-3, AC-4, AC-11, AC-12)
+  - [ ] Base pieces: buttons, links, fields, Design / Code switch, theme toggle, project cards (AC-5 to AC-10)
+  - [ ] `/kit/` page, `design.md`, Taste inspection at three widths (AC-1, AC-4, AC-13)
 
 ## Skeleton
 
