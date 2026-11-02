@@ -1,0 +1,77 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Square, flat, one fill (spec 0002, AC-5). Renders <a> when href is set, else <button>.
+type Props = HTMLAttributes<'button'> & {
+  variant?: 'primary' | 'secondary';
+  href?: string;
+};
+
+const { variant = 'primary', href, type = 'button', disabled = false, class: className, ...rest } = Astro.props;
+
+const classes = [
+  'btn',
+  `btn-${variant}`,
+  'inline-flex min-h-11 items-center justify-center gap-2 px-6 py-2',
+  'text-body font-semibold leading-tight no-underline select-none',
+  className,
+];
+---
+
+{
+  href && !disabled ? (
+    <a href={href} class:list={classes} {...(rest as HTMLAttributes<'a'>)}>
+      <slot />
+    </a>
+  ) : href ? (
+    // A disabled link has no href, so it is not focusable or followable.
+    <a role="link" aria-disabled="true" class:list={classes} {...(rest as HTMLAttributes<'a'>)}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} disabled={disabled} class:list={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}
+
+<style>
+  .btn {
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition:
+      translate var(--duration-feedback) var(--ease-page),
+      box-shadow var(--duration-feedback) var(--ease-page),
+      background-color var(--duration-feedback) var(--ease-page);
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-accent-ink);
+    --ledge: var(--color-accent-ink);
+  }
+
+  .btn-secondary {
+    background-color: var(--color-ink);
+    color: var(--color-bg);
+    --ledge: var(--color-accent);
+  }
+
+  /* Hover: the button lifts and leaves a ledge under it. Under reduced motion only the ledge shows. */
+  .btn:not(:disabled, [aria-disabled='true']):hover {
+    translate: 0 calc(var(--distance-lift) * -1);
+    box-shadow: 0 var(--size-ledge) 0 0 var(--ledge);
+  }
+
+  .btn:not(:disabled, [aria-disabled='true']):active {
+    translate: 0 0;
+    box-shadow: none;
+  }
+
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    cursor: not-allowed;
+    background-color: var(--color-surface);
+    color: var(--color-muted);
+  }
+</style>

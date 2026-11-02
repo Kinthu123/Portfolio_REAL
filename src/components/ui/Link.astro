@@ -1,0 +1,62 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Inline (underlined) or arrow link (spec 0002, AC-6).
+type Props = HTMLAttributes<'a'> & {
+  href: string;
+  arrow?: boolean;
+};
+
+const { href, arrow = false, class: className, ...rest } = Astro.props;
+---
+
+<a href={href} class:list={[arrow ? 'link-arrow font-semibold' : 'link-inline', className]} {...rest}>
+  <slot />
+  {
+    arrow && (
+      <svg class="link-arrow-icon" width="1em" height="1em" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" />
+      </svg>
+    )
+  }
+</a>
+
+<style>
+  a {
+    color: inherit;
+    text-decoration-thickness: var(--size-underline);
+    text-underline-offset: var(--size-underline-offset);
+    transition: text-decoration-color var(--duration-feedback) var(--ease-page);
+  }
+
+  .link-inline {
+    text-decoration-line: underline;
+    text-decoration-color: currentColor;
+  }
+
+  .link-inline:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+  }
+
+  /* Hover: the arrow nudges and a tangerine underline appears. Under reduced motion only the underline shows. */
+  .link-arrow:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .link-arrow-icon {
+    flex: none;
+    transition: translate var(--duration-feedback) var(--ease-page);
+  }
+
+  .link-arrow:hover .link-arrow-icon {
+    translate: var(--distance-nudge) 0;
+  }
+</style>

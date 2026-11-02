@@ -1,0 +1,49 @@
+---
+// Flips the theme and remembers it (spec 0002, AC-3, AC-9). Hidden without JavaScript, since it needs it.
+---
+
+<button type="button" class="theme-toggle hidden size-11 items-center justify-center in-[.js]:inline-flex" aria-label="Switch theme" data-theme-toggle>
+  <svg class="dark:hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+  </svg>
+  <svg class="hidden dark:block" width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" />
+    <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="square" />
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: background-color var(--duration-feedback) var(--ease-page);
+  }
+
+  .theme-toggle:hover {
+    background-color: var(--color-surface);
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const toggles = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
+
+  // The label says what pressing will do.
+  const label = () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    toggles.forEach((button) => button.setAttribute('aria-label', `Switch to ${next} theme`));
+  };
+
+  toggles.forEach((button) =>
+    button.addEventListener('click', () => {
+      const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = theme;
+      try {
+        localStorage.setItem('theme', theme);
+      } catch {}
+      label();
+    }),
+  );
+
+  label();
+</script>
