@@ -7,6 +7,8 @@
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"workers_dev": true,
 	"preview_urls": true,
+	// Branch builds run `npx wrangler preview`, which needs this block (it may stay empty).
+	"previews": {},
 	"assets": {
 		"directory": "./dist",
 		"binding": "ASSETS",
