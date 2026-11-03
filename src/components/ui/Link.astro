@@ -29,13 +29,16 @@ const { href, arrow = false, class: className, ...rest } = Astro.props;
     transition: text-decoration-color var(--duration-feedback) var(--ease-page);
   }
 
+  /* Inline links are the accent colour; on hover they turn ink. */
   .link-inline {
+    color: var(--color-accent);
     text-decoration-line: underline;
     text-decoration-color: currentColor;
+    transition: color var(--duration-feedback) var(--ease-page);
   }
 
   .link-inline:is(:hover, [data-state='hover']) {
-    text-decoration-color: var(--color-accent);
+    color: var(--color-ink);
   }
 
   .link-arrow {

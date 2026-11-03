@@ -14,17 +14,17 @@
 
   /* Colour, light (dark overrides below) */
   --color-bg: #ffffff;
-  --color-surface: #f4f4f2;
-  --color-ink: #1f2b4d;
-  --color-muted: #5c6378;
-  --color-accent: #f7941d;
-  --color-accent-ink: #1f2b4d;
-  --color-stage: #05070a;
+  --color-surface: #f4f4f4;
+  --color-ink: #111111;
+  --color-muted: #6b6b6b;
+  --color-accent: #1a4be0;
+  --color-accent-ink: #ffffff;
+  --color-stage: #111111;
   --color-stage-ink: #ffffff;
-  --color-field-close: #e3e1dc;
+  --color-field-close: #eeeeee;
   --color-error: #b42318;
-  --color-focus: #1f2b4d;
-  --color-ring: #1f2b4d;
+  --color-focus: #111111;
+  --color-ring: #111111;
 
   /* Families (the --font-young-serif etc. variables come from Astro's Fonts API) */
   --font-display: var(--font-young-serif);
@@ -70,31 +70,35 @@
 /* Any element, not just <html>, so /kit/ can show both themes side by side. */
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-bg: #111a33;
-  --color-surface: #18233f;
-  --color-ink: #eef0f6;
-  --color-muted: #a3abc2;
-  --color-stage: #070b16;
-  --color-stage-ink: #eef0f6;
-  --color-field-close: #18233f;
+  --color-bg: #121212;
+  --color-surface: #1e1e1e;
+  --color-ink: #f2f2f2;
+  --color-muted: #a0a0a0;
+  --color-accent: #6b8cff;
+  --color-accent-ink: #111111;
+  --color-stage: #000000;
+  --color-stage-ink: #f2f2f2;
+  --color-field-close: #1e1e1e;
   --color-error: #ff8a7a;
-  --color-focus: #f7941d;
-  --color-ring: #f7941d;
+  --color-focus: #f2f2f2;
+  --color-ring: #f2f2f2;
 }
 
 /* Restores light inside a dark page (the /kit/ light panel). Keep in step with @theme above. */
 [data-theme="dark"] [data-theme="light"] {
   color-scheme: light;
   --color-bg: #ffffff;
-  --color-surface: #f4f4f2;
-  --color-ink: #1f2b4d;
-  --color-muted: #5c6378;
-  --color-stage: #05070a;
+  --color-surface: #f4f4f4;
+  --color-ink: #111111;
+  --color-muted: #6b6b6b;
+  --color-accent: #1a4be0;
+  --color-accent-ink: #ffffff;
+  --color-stage: #111111;
   --color-stage-ink: #ffffff;
-  --color-field-close: #e3e1dc;
+  --color-field-close: #eeeeee;
   --color-error: #b42318;
-  --color-focus: #1f2b4d;
-  --color-ring: #1f2b4d;
+  --color-focus: #111111;
+  --color-ring: #111111;
 }
 
 /* Reduced motion: movement distances drop to zero, colour transitions stay. */

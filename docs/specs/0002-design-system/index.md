@@ -1,11 +1,11 @@
-# 0002. Design system: split stage, navy on white
+# 0002. Design system: split stage, black on white
 
 **Date**: 2026-11-02
 **Status**: Accepted
 
 ## Summary
 
-The portfolio uses the Taste direction "The split stage": one half of the screen stays fixed and holds your character on a flat colour field, the other half scrolls with your work. Headlines are Young Serif, reading text is Source Serif 4, colours are navy on white with one tangerine accent, every shape has square corners, and the page moves snappily while only the character bounces. This spec fixes the tokens (colours, type, spacing, motion) for light and dark mode and the base pieces every later page reuses: buttons, links, form fields, the Design / Code switch, the theme toggle, and project cards.
+The portfolio uses the Taste direction "The split stage": one half of the screen stays fixed and holds your character on a flat colour field, the other half scrolls with your work. Headlines are Young Serif, reading text is Source Serif 4, colours are near black on white with one blue for links and the main button (the "Sheet and biro" palette, which replaced navy and tangerine on 2026-11-03 at Tyson's request), every shape has square corners, and the page moves snappily while only the character bounces. This spec fixes the tokens (colours, type, spacing, motion) for light and dark mode and the base pieces every later page reuses: buttons, links, form fields, the Design / Code switch, the theme toggle, and project cards.
 
 ## Requirements
 
@@ -59,18 +59,18 @@ Reasoning and options: see [rationale.md](rationale.md).
 
 | Token | Light | Dark | Use |
 |---|---|---|---|
-| `bg` | `#ffffff` | `#111a33` | page ground, reading column |
-| `surface` | `#f4f4f2` | `#18233f` | a tone step for panels and fields |
-| `ink` | `#1f2b4d` | `#eef0f6` | all running text, headings |
-| `muted` | `#5c6378` | `#a3abc2` | secondary notes only (darkened from `#646b80` in the build to pass AA on `field-close`) |
-| `accent` | `#f7941d` | `#f7941d` | the main button and one other thing per screen |
-| `accent-ink` | `#1f2b4d` | `#1f2b4d` | text on accent |
-| `stage` | `#05070a` | `#070b16` | default stage field (before a project colour takes over) |
-| `stage-ink` | `#ffffff` | `#eef0f6` | text on the stage |
-| `field-close` | `#e3e1dc` | `#18233f` | the closing field near the footer |
+| `bg` | `#ffffff` | `#121212` | page ground, reading column |
+| `surface` | `#f4f4f4` | `#1e1e1e` | a tone step for panels and fields |
+| `ink` | `#111111` | `#f2f2f2` | all running text, headings |
+| `muted` | `#6b6b6b` | `#a0a0a0` | secondary notes only |
+| `accent` | `#1a4be0` | `#6b8cff` | text links and the main button |
+| `accent-ink` | `#ffffff` | `#111111` | text on accent |
+| `stage` | `#111111` | `#000000` | default stage field (before a project colour takes over) |
+| `stage-ink` | `#ffffff` | `#f2f2f2` | text on the stage |
+| `field-close` | `#eeeeee` | `#1e1e1e` | the closing field near the footer |
 | `error` | `#b42318` | `#ff8a7a` | error rings and messages |
-| `focus` | `#1f2b4d` | `#f7941d` | keyboard focus ring (3px, offset 3px) |
-| `ring` | `#1f2b4d` | `#f7941d` | the 2px inner ring on a focused field |
+| `focus` | `#111111` | `#f2f2f2` | keyboard focus ring (3px, offset 3px) |
+| `ring` | `#111111` | `#f2f2f2` | the 2px inner ring on a focused field |
 
 **Type**:
 - Display: Young Serif 400, tracking `-0.02em`, leading `0.95`, sentence case (the hero name may be lowercase).
@@ -95,8 +95,8 @@ Reasoning and options: see [rationale.md](rationale.md).
 
 | Component | Props | States | Notes |
 |---|---|---|---|
-| `Button.astro` | `variant: 'primary' \| 'secondary'`, `href?`, `type?`, `disabled?` | hover (rise 2px), pressed, focus, disabled | renders `<a>` when `href` is set, else `<button>`; primary is tangerine, secondary is solid ink |
-| `Link.astro` | `href`, `arrow?: boolean` | hover, focus | inline: underline 1.5px, offset 4px, underline turns tangerine on hover; arrow: bold, arrow nudges 4px on hover |
+| `Button.astro` | `variant: 'primary' \| 'secondary'`, `href?`, `type?`, `disabled?` | hover (rise 2px), pressed, focus, disabled | renders `<a>` when `href` is set, else `<button>`; primary is blue, secondary is solid ink |
+| `Link.astro` | `href`, `arrow?: boolean` | hover, focus | inline: blue, underline 1.5px, offset 4px, turns ink on hover; arrow: bold, arrow nudges 4px and a blue underline appears on hover |
 | `Field.astro` | `label`, `name`, `multiline?`, `hint?`, `error?`, input attributes | rest, focus, error | filled with `surface`; label above; hint and error linked by `aria-describedby`; `aria-invalid="true"` when `error` is set |
 | `DesignCodeSwitch.astro` | `value: 'design' \| 'code'` (initial) | pressed, focus | two `<button aria-pressed>`; dispatches `designcode:change` with `{ value }` on the element |
 | `ThemeToggle.astro` | none | focus | sun/moon icon, 44px square, label reflects the next action |
