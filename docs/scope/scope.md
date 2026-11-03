@@ -70,9 +70,9 @@ spec [0002](../specs/0002-design-system/index.md) · code in `src/styles/global.
 Header with navigation, footer with social links, theme toggle, a 404 page, and a first deploy, so every page has a home and the stack is proven live.
 **Done when:** the shell renders on phone, tablet, and desktop, the theme toggle remembers the choice, navigation works by keyboard, and a preview deploy is live.
 code in `src/components/shell/`, `src/layouts/BaseLayout.astro`, `src/pages/404.astro`
-- [ ] Build it: `/develop site shell`
+- [x] Build it: `/develop site shell`
   - [x] Header (one bar, full screen phone menu), footer, skip link, page swaps, 404 page; each new page adds its link in `src/components/shell/nav.ts`
-  - [ ] Preview deploy live: push the branch, confirm `/nope/` returns 404 on the preview URL
+  - [x] Preview deploy live at `site-shell-portfolio-real.icedevil196.workers.dev`; `/nope/` returns status 404. Worker Previews (beta) show a plain "Not found" instead of the custom page, which production serves; recheck on `main` after merge
 
 ## Journey 1: Hiring manager path
 A hiring manager lands, sees who you are, reads a case study in depth, checks your background, grabs your resume, and gets in touch. Every step and state finished before Journey 2 starts.
