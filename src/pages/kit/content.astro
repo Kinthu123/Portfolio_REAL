@@ -1,0 +1,331 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Link from '../../components/ui/Link.astro';
+import ProjectCard from '../../components/ui/ProjectCard.astro';
+import ThemeToggle from '../../components/ui/ThemeToggle.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import {
+  caseStudyHref,
+  caseStudyMeta,
+  formatMonth,
+  getCaseStudies,
+  getCertificates,
+  getNextCaseStudy,
+  getPlayground,
+  getProfile,
+  getServices,
+  RESUME_PATH,
+  resolveCaseStudy,
+} from '../../lib/content';
+import { contrastRatio, STAGE_INK } from '../../lib/contrast';
+
+// Internal content page (spec 0003, AC-2): noindex, not linked. Every visible entry of every type,
+// with its fields and rendered body, so a new file shows up here with no code change (AC-15).
+
+const profile = await getProfile();
+const { Content: ProfileStory } = await render(profile);
+
+const caseStudies = await Promise.all(
+  (await getCaseStudies()).map(async (entry) => ({
+    entry,
+    link: caseStudyHref(entry),
+    next: await getNextCaseStudy(entry.id),
+    Story: entry.data.where === 'site' ? (await render(entry)).Content : null,
+  })),
+);
+
+const certificates = await getCertificates();
+
+const services = await Promise.all(
+  (await getServices()).map(async (entry) => ({
+    entry,
+    examples: (await Promise.all((entry.data.examples ?? []).map(resolveCaseStudy))).filter((cs) => cs !== null),
+    Body: entry.body?.trim() ? (await render(entry)).Content : null,
+  })),
+);
+
+const playground = await Promise.all(
+  (await getPlayground()).map(async (entry) => ({
+    entry,
+    caseStudy: entry.data.caseStudy ? await resolveCaseStudy(entry.data.caseStudy) : null,
+    Note: (await render(entry)).Content,
+  })),
+);
+
+const day = (date: Date) =>
+  date.toLocaleDateString('en-GB', { timeZone: 'UTC', day: 'numeric', month: 'short', year: 'numeric' });
+const span = (start: string, end?: string) => `${formatMonth(start)} to ${end ? formatMonth(end) : 'now'}`;
+const sections = [
+  ['profile', 'Profile'],
+  ['case-studies', 'Case studies'],
+  ['certificates', 'Certificates'],
+  ['services', 'Services'],
+  ['playground', 'Playground'],
+] as const;
+---
+
+<BaseLayout title="Content · Kit · Thu Rein Htet" noindex>
+  <main class="px-page py-18">
+    <div class="flex items-start justify-between gap-6">
+      <h1 class="text-head">Content</h1>
+      <ThemeToggle />
+    </div>
+    <p class="mt-4 max-w-measure text-lead text-muted">
+      Every published entry of every content type, read through the shared content module. Drafts show
+      here only in <code>pnpm dev</code>. This page is hidden from search and navigation.
+    </p>
+    <nav class="mt-6" aria-label="Content types">
+      <ul class="flex flex-wrap gap-x-6 gap-y-2 text-small" role="list">
+        <li><Link href="/kit/">Back to the kit</Link></li>
+        {sections.map(([id, label]) => <li><Link href={`#${id}`}>{label}</Link></li>)}
+      </ul>
+    </nav>
+
+    <section id="profile" class="mt-18" aria-labelledby="profile-heading">
+      <h2 id="profile-heading" class="text-lead">Profile</h2>
+      <div class="mt-6 grid gap-8 md:grid-cols-[minmax(0,14rem)_1fr]">
+        <Image src={profile.data.photo} alt={profile.data.photoAlt} widths={[224, 448]} sizes="14rem" class="aspect-square w-full max-w-56 object-cover" />
+        <div>
+          <p class="font-display text-head">{profile.data.name}</p>
+          <p class="mt-2 text-lead">{profile.data.role}</p>
+          <p class="mt-4 max-w-measure text-body">{profile.data.intro}</p>
+          <dl class="kit-fields mt-6">
+            <dt>Availability</dt><dd>{profile.data.availability}</dd>
+            <dt>Location</dt><dd>{profile.data.location}</dd>
+            <dt>Email</dt><dd><Link href={`mailto:${profile.data.email}`}>{profile.data.email}</Link></dd>
+            <dt>Links</dt>
+            <dd class="flex flex-wrap gap-x-4">
+              <Link href={profile.data.links.linkedin}>LinkedIn</Link>
+              <Link href={profile.data.links.behance}>Behance</Link>
+              <Link href={profile.data.links.github}>GitHub</Link>
+            </dd>
+            <dt>Resume</dt><dd><Link href={RESUME_PATH}>{RESUME_PATH}</Link></dd>
+            <dt>Tools</dt><dd>{profile.data.tools.join(', ') || 'none'}</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="mt-10 grid gap-8 md:grid-cols-3">
+        <div>
+          <h3 class="text-small font-semibold">Experience</h3>
+          <ul class="mt-2 space-y-3 text-small" role="list">
+            {
+              profile.data.experience.map((job) => (
+                <li>
+                  <p class="font-semibold">{job.role}, {job.place}</p>
+                  <p class="text-muted">{span(job.start, job.end)} · {job.location}</p>
+                  {job.summary && <p class="mt-1">{job.summary}</p>}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-small font-semibold">Education</h3>
+          <ul class="mt-2 space-y-3 text-small" role="list">
+            {
+              profile.data.education.map((school) => (
+                <li>
+                  <p class="font-semibold">{school.degree}</p>
+                  <p class="text-muted">{school.school} · {span(school.start, school.end)}</p>
+                  {school.note && <p class="mt-1">{school.note}</p>}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-small font-semibold">Awards</h3>
+          <ul class="mt-2 space-y-3 text-small" role="list">
+            {
+              profile.data.awards.map((award) => (
+                <li>
+                  <p class="font-semibold">{award.title}</p>
+                  <p class="text-muted">{award.issuer} · {award.year}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="kit-body mt-10 max-w-measure text-body">
+        <ProfileStory />
+      </div>
+    </section>
+
+    <section id="case-studies" class="mt-18" aria-labelledby="case-studies-heading">
+      <h2 id="case-studies-heading" class="text-lead">Case studies</h2>
+      <p class="mt-2 max-w-measure text-small text-muted">
+        By order. Site case studies link to their page (built in scope #7); Behance ones open Behance.
+      </p>
+      <ul class="mt-6 grid gap-12 lg:grid-cols-2" role="list">
+        {
+          caseStudies.map(({ entry, link, next, Story }) => (
+            <li class="min-w-0">
+              <ProjectCard
+                href={link.href}
+                title={entry.data.title}
+                meta={caseStudyMeta(entry)}
+                image={entry.data.cover}
+                alt={entry.data.coverAlt}
+                {...(link.external && { target: '_blank', rel: 'noopener noreferrer' })}
+              />
+              <p class="mt-4 text-body">{entry.data.summary}</p>
+              <dl class="kit-fields mt-4">
+                <dt>Id</dt><dd><code>{entry.id}</code>{entry.data.draft && ' (draft)'}</dd>
+                <dt>Order</dt><dd>{entry.data.order}</dd>
+                <dt>Where</dt><dd>{entry.data.where}</dd>
+                <dt>Link</dt><dd><code>{link.href}</code></dd>
+                {entry.data.behanceUrl && entry.data.where === 'site' && <><dt>Also on</dt><dd><Link href={entry.data.behanceUrl}>Behance</Link></dd></>}
+                <dt>Platform</dt><dd>{entry.data.platform}</dd>
+                <dt>Duration</dt><dd>{entry.data.duration}</dd>
+                <dt>Team</dt><dd>{entry.data.team}</dd>
+                <dt>Context</dt><dd>{entry.data.context}</dd>
+                <dt>Tools</dt><dd>{entry.data.tools.join(', ')}</dd>
+                <dt>Next</dt><dd>{next ? next.data.title : 'none'}</dd>
+                {entry.data.results && <><dt>Results</dt><dd>{entry.data.results.map((r) => `${r.value} ${r.label}`).join(' · ')}</dd></>}
+                {entry.data.screens && <><dt>Screens</dt><dd>{entry.data.screens.length}</dd></>}
+              </dl>
+              <div class="mt-4 grid grid-cols-2 gap-3" style={`background-color: ${entry.data.stageColor}`}>
+                {STAGE_INK.map((ink) => (
+                  <p class="p-4 text-small" style={`color: ${ink}`}>
+                    <span class="font-semibold">{entry.data.stageColor}</span>
+                    <br />
+                    {contrastRatio(entry.data.stageColor, ink).toFixed(2)}:1 with {ink}
+                  </p>
+                ))}
+              </div>
+              {Story && (
+                <div class="kit-body mt-6 max-w-measure text-body">
+                  <Story />
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section id="certificates" class="mt-18" aria-labelledby="certificates-heading">
+      <h2 id="certificates-heading" class="text-lead">Certificates</h2>
+      <p class="mt-2 max-w-measure text-small text-muted">Newest first.</p>
+      <ul class="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-4" role="list">
+        {
+          certificates.map((cert) => (
+            <li>
+              <Image src={cert.data.image} alt={cert.data.alt} widths={[400, 800]} sizes="(min-width: 1024px) 25vw, 100vw" class="aspect-[4/3] w-full bg-surface object-cover" />
+              <p class="mt-3 text-body font-semibold">{cert.data.title}</p>
+              <p class="text-small text-muted">
+                {cert.data.issuer} · {formatMonth(cert.data.date)}
+                {cert.data.honour && ` · with ${cert.data.honour}`}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section id="services" class="mt-18" aria-labelledby="services-heading">
+      <h2 id="services-heading" class="text-lead">Services</h2>
+      <p class="mt-2 max-w-measure text-small text-muted">By order.</p>
+      <ul class="mt-6 grid gap-12 lg:grid-cols-2" role="list">
+        {
+          services.map(({ entry, examples, Body }) => (
+            <li class="bg-surface p-6">
+              <h3 class="font-display text-lead">{entry.data.title}</h3>
+              <p class="mt-2 text-body">{entry.data.summary}</p>
+              <h4 class="mt-6 text-small font-semibold">Includes</h4>
+              <ul class="mt-2 list-disc space-y-1 pl-5 text-small">
+                {entry.data.includes.map((item) => <li>{item}</li>)}
+              </ul>
+              <h4 class="mt-6 text-small font-semibold">Steps</h4>
+              <ol class="mt-2 list-decimal space-y-2 pl-5 text-small">
+                {entry.data.steps.map((step) => (
+                  <li>
+                    <span class="font-semibold">{step.title}.</span> {step.text}
+                  </li>
+                ))}
+              </ol>
+              <h4 class="mt-6 text-small font-semibold">Examples</h4>
+              <p class="mt-2 text-small">
+                {examples.length > 0
+                  ? examples.map((cs, i) => <>{i > 0 && ', '}<Link href={caseStudyHref(cs).href}>{cs.data.title}</Link></>)
+                  : 'none'}
+              </p>
+              {Body && (
+                <div class="kit-body mt-6 text-small">
+                  <Body />
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section id="playground" class="mt-18" aria-labelledby="playground-heading">
+      <h2 id="playground-heading" class="text-lead">Playground</h2>
+      <p class="mt-2 max-w-measure text-small text-muted">Newest first.</p>
+      <ul class="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3" role="list">
+        {
+          playground.map(({ entry, caseStudy, Note }) => (
+            <li>
+              <Image src={entry.data.image} alt={entry.data.alt} widths={[400, 800]} sizes="(min-width: 1024px) 33vw, 100vw" class="aspect-[4/3] w-full bg-surface object-cover" />
+              <p class="mt-3 text-body font-semibold">{entry.data.title}</p>
+              <p class="text-small text-muted">
+                {day(entry.data.date)}
+                {caseStudy && <> · from <Link href={caseStudyHref(caseStudy).href}>{caseStudy.data.title}</Link></>}
+              </p>
+              <div class="kit-body mt-2 text-small">
+                <Note />
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .kit-fields {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.25rem 1.5rem;
+    font-size: var(--text-small);
+    line-height: var(--text-small--line-height);
+  }
+
+  .kit-fields dt {
+    color: var(--color-muted);
+  }
+
+  /* Long values (a Behance URL) wrap instead of widening the column. */
+  .kit-fields dd {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .kit-body :global(h2) {
+    margin-top: 1.5em;
+    font-family: var(--font-display);
+    font-size: var(--text-lead);
+    line-height: var(--text-lead--line-height);
+  }
+
+  .kit-body :global(p),
+  .kit-body :global(ul) {
+    margin-top: 0.75em;
+  }
+
+  .kit-body :global(ul) {
+    list-style: disc;
+    padding-left: 1.25em;
+  }
+
+  .kit-body :global(strong) {
+    font-weight: 600;
+  }
+</style>

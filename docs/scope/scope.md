@@ -13,7 +13,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 |---|---------|-------|--------|
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | planned |
-| 3 | Content model | Foundation | planned |
+| 3 | Content model | Foundation | done |
 | 4 | Design system & UI foundation | Foundation | done |
 | 5 | Site shell | Skeleton | planned |
 | 6 | Home page | Journey 1 | planned |
@@ -43,10 +43,16 @@ Capture conventions from the real scaffolded project, then install lint, format,
 **Done when:** root `AGENTS.md` reflects the real stack, and lint, format, and type checks run clean.
 - [ ] Capture conventions + tooling choices: `/audit`
 
-### 3. Content model · needs a decision
+### 3. Content model
 The shape of every content file: case study, playground piece, certificate, service, and the site profile (bio, links, resume). One text file per item, so adding work later means adding a file.
 **Done when:** each content type has defined fields, a sample file of each renders without errors, and a missing required field fails the build instead of showing a broken page.
-- [ ] Design it (spec): `/architect content model`
+spec [0003](../specs/0003-content-model/index.md) · code in `src/content.config.ts`, `src/lib/content.ts`, `src/content/`
+- [x] Design it (spec): `/architect content model`
+- [x] Build it: `/develop content model`
+  - [x] Case studies: schema, loader checks, drafts, next link, POS and Alote files (AC-1, AC-3 to AC-8, AC-10, AC-11, AC-13, AC-14)
+  - [x] Profile and certificates, with your real resume PDF (AC-1, AC-6, AC-11, AC-12)
+  - [x] Services and playground, with links to case studies (AC-1, AC-8, AC-9, AC-12)
+  - [x] `/kit/content/` page, then break each rule once to prove the build stops (AC-2, AC-3 to AC-11, AC-15)
 
 ### 4. Design system & UI foundation
 The visual language, set from your references with the Taste skill, plus base components. Light and dark themes, built to WCAG AA from the start.

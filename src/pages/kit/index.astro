@@ -6,7 +6,7 @@ import ProjectCard from '../../components/ui/ProjectCard.astro';
 import Link from '../../components/ui/Link.astro';
 import ThemeToggle from '../../components/ui/ThemeToggle.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import posWarehouse from '../../assets/work/pos-warehouse.jpg';
+import { caseStudyMeta, getSiteCaseStudies } from '../../lib/content';
 
 // Internal reference page (spec 0002, AC-13): noindex, not linked from the site.
 // `data-state` shows hover, pressed, and focus without a pointer; the real pieces respond to it too.
@@ -40,12 +40,14 @@ const linkStates = [
   { label: 'Focus', attrs: { 'data-state': 'focus' } },
 ];
 
+// The first site case study, so the card always shows a real picture.
+const [pos] = await getSiteCaseStudies();
 const card = {
   href: '#',
-  title: 'Cosmetic retail POS and warehouse',
-  meta: 'UI/UX design · 2025',
-  image: posWarehouse,
-  alt: 'The Beta POS login screen open on a laptop resting on a stone block.',
+  title: pos.data.title,
+  meta: caseStudyMeta(pos),
+  image: pos.data.cover,
+  alt: pos.data.coverAlt,
   level: 4 as const,
 };
 ---
