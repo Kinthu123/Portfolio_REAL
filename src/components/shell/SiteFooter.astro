@@ -1,0 +1,52 @@
+---
+import Link from '../ui/Link.astro';
+import { getProfile, RESUME_PATH } from '../../lib/content';
+
+// The closing field (design.md, Palette): an invitation to get in touch, then the links
+// elsewhere. The email link becomes a link to the contact page when scope #10 ships.
+const profile = await getProfile();
+const { name, availability, location, email, links } = profile.data;
+const year = new Date().getFullYear();
+
+const elsewhere = [
+  { label: 'LinkedIn', href: links.linkedin },
+  { label: 'Behance', href: links.behance },
+  { label: 'GitHub', href: links.github },
+];
+---
+
+<footer class="bg-field-close px-page pt-18 pb-8 lg:pt-30">
+  <div class="grid gap-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-end">
+    <div>
+      <h2 class="max-w-[18ch] text-head">Have a role or a project in mind?</h2>
+      <p class="mt-6 max-w-measure text-lead text-muted">{availability}. Based in {location}.</p>
+      <p class="mt-8 text-lead">
+        <Link href={`mailto:${email}`} arrow class="break-all">{email}</Link>
+      </p>
+    </div>
+
+    <nav aria-label="Elsewhere" class="lg:justify-self-end">
+      <ul class="grid gap-1" role="list">
+        {
+          elsewhere.map((item) => (
+            <li>
+              <Link href={item.href} arrow class="min-h-11">
+                {item.label}
+              </Link>
+            </li>
+          ))
+        }
+        <li>
+          <Link href={RESUME_PATH} arrow class="min-h-11" data-umami-event="resume-download">
+            Resume <span class="text-small font-normal text-muted">PDF</span>
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="mt-18 flex flex-wrap justify-between gap-x-6 gap-y-2 text-small text-muted lg:mt-30">
+    <p>© {year} {name}</p>
+    <p>Designed in Figma, built with Astro.</p>
+  </div>
+</footer>

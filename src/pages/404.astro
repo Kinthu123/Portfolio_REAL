@@ -1,10 +1,44 @@
 ---
+import Button from '../components/ui/Button.astro';
+import Link from '../components/ui/Link.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getProfile, RESUME_PATH } from '../lib/content';
+
+// Served with a real 404 status for any unknown path (wrangler.jsonc, not_found_handling).
+const { email, links } = (await getProfile()).data;
+
+// Where a lost visitor most likely wanted to go. Behance stays until the case studies move here.
+const elsewhere = [
+  { label: 'Read the resume', href: RESUME_PATH, note: 'One page PDF: experience, education, and tools.', event: 'resume-download' },
+  { label: 'See the case studies on Behance', href: links.behance, note: 'The full write ups, while they move onto this site.' },
+  { label: 'Email Tyson', href: `mailto:${email}`, note: 'If you were looking for something specific, ask.' },
+];
 ---
 
-<BaseLayout title="Page not found · Thu Rein Htet">
-  <main class="mx-auto flex min-h-dvh max-w-3xl flex-col justify-center gap-4 px-page">
-    <h1 class="text-head">Page not found</h1>
-    <p class="text-lead"><a class="underline" href="/">Back to the home page</a></p>
-  </main>
+<BaseLayout title="Page not found · Thu Rein Htet" noindex>
+  <div class="grid gap-x-(--spacing-column) gap-y-18 px-page py-section lg:grid-cols-2 lg:items-end">
+    <section aria-labelledby="not-found-heading">
+      <h1 id="not-found-heading" class="text-display">Nothing here.</h1>
+      <p class="mt-8 max-w-measure text-lead">
+        This page does not exist. The link may be old, or the page may have moved while the new portfolio is being built.
+      </p>
+      <Button href="/" class="mt-12">Back to the home page</Button>
+    </section>
+
+    <section aria-labelledby="instead-heading" class="lg:pb-2">
+      <h2 id="instead-heading" class="text-lead">Or try one of these</h2>
+      <ul class="mt-6 grid gap-8" role="list">
+        {
+          elsewhere.map((item) => (
+            <li class="max-w-measure">
+              <Link href={item.href} arrow class="text-lead" data-umami-event={item.event}>
+                {item.label}
+              </Link>
+              <p class="mt-1 text-muted">{item.note}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
 </BaseLayout>

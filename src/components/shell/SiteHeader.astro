@@ -1,0 +1,264 @@
+---
+import ThemeToggle from '../ui/ThemeToggle.astro';
+import { getProfile } from '../../lib/content';
+import { isCurrent, NAV } from './nav';
+
+// One bar across the top (scope #5). From the lg width the links sit in the bar; below it a
+// Menu button opens them as a full screen sheet. Without JavaScript the links always show.
+const { pathname } = Astro.url;
+const profile = await getProfile();
+const { name } = profile.data;
+const onHome = pathname === '/';
+---
+
+<header class="px-page">
+  <div class="flex min-h-18 flex-wrap items-center justify-between gap-x-6 py-3">
+    <a href="/" class="wordmark" aria-current={onHome ? 'page' : undefined}>{name}</a>
+
+    <nav class="site-nav ml-auto" aria-label="Main">
+      <ul class="flex flex-wrap items-center gap-x-8" role="list">
+        {
+          NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="nav-link"
+                aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}
+                data-umami-event={item.event}
+              >
+                {item.label}
+                {item.file && <span class="text-small text-muted">{item.file}</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-1">
+      <ThemeToggle />
+      <button
+        type="button"
+        class="shell-button menu-open"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        data-menu-open
+      >
+        Menu
+      </button>
+    </div>
+  </div>
+
+  <dialog id="site-menu" class="site-menu" aria-label="Menu">
+    <div class="flex min-h-18 items-center justify-between gap-6 px-page py-3">
+      <a href="/" class="wordmark" aria-current={onHome ? 'page' : undefined}>{name}</a>
+      <div class="flex items-center gap-1">
+        <ThemeToggle />
+        <button type="button" class="shell-button" data-menu-close autofocus>Close</button>
+      </div>
+    </div>
+
+    <nav class="flex-1 px-page pt-12" aria-label="Main">
+      <ul class="grid gap-2" role="list">
+        {
+          NAV.map((item, index) => (
+            <li class="menu-item" style={`--i: ${index}`}>
+              <a
+                href={item.href}
+                class="menu-link"
+                aria-current={isCurrent(item.href, pathname) ? 'page' : undefined}
+                data-umami-event={item.event}
+              >
+                {item.label}
+                {item.file && <span class="font-text text-small text-muted">{item.file}</span>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <p class="menu-item px-page pt-12 pb-8 text-small text-muted" style={`--i: ${NAV.length}`}>
+      {profile.data.availability}.{' '}
+      <a class="text-ink underline underline-offset-4" href={`mailto:${profile.data.email}`}>{profile.data.email}</a>
+    </p>
+  </dialog>
+</header>
+
+<style>
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-family: var(--font-display);
+    font-size: var(--text-lead);
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--color-ink);
+  }
+
+  /* Bar links: ink, with a blue underline on hover and on the current page. */
+  .nav-link,
+  .menu-link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4em;
+    color: var(--color-ink);
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: var(--size-underline);
+    text-underline-offset: var(--size-underline-offset);
+    transition: text-decoration-color var(--duration-feedback) var(--ease-page);
+  }
+
+  .nav-link {
+    align-items: center;
+    min-height: 44px;
+  }
+
+  :is(.nav-link, .menu-link):is(:hover, [aria-current='page']) {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .site-nav {
+    display: none;
+  }
+
+  /* lg and up, or no JavaScript (the Menu button needs it): links sit in the bar. */
+  :global(html:not(.js)) .site-nav {
+    display: block;
+  }
+
+  /* Below lg without JavaScript, the links take their own row under the name. */
+  @media (width < 64rem) {
+    :global(html:not(.js)) .site-nav {
+      flex-basis: 100%;
+      order: 1;
+      margin-left: 0;
+    }
+  }
+
+  .shell-button {
+    min-height: 44px;
+    padding-inline: 12px;
+    font-weight: 600;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: background-color var(--duration-feedback) var(--ease-page);
+  }
+
+  .shell-button:hover {
+    background-color: var(--color-surface);
+  }
+
+  .menu-open {
+    display: none;
+  }
+
+  :global(html.js) .menu-open {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  @media (width >= 64rem) {
+    .site-nav {
+      display: block;
+    }
+
+    :global(html.js) .menu-open {
+      display: none;
+    }
+  }
+
+  /* The sheet fills the screen; the page behind it does not scroll. */
+  .site-menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    opacity: 1;
+    transition: opacity var(--duration-feedback) var(--ease-page);
+  }
+
+  .site-menu[open] {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .site-menu::backdrop {
+    background-color: var(--color-bg);
+  }
+
+  :global(html:has(.site-menu[open])) {
+    overflow: hidden;
+  }
+
+  .menu-link {
+    font-family: var(--font-display);
+    font-size: var(--text-head);
+    line-height: var(--text-head--line-height);
+    letter-spacing: var(--text-head--letter-spacing);
+    padding-block: 8px;
+  }
+
+  /* Entrance: links rise in one after another. Reduced motion sets the rise to zero, so they only fade. */
+  .menu-item {
+    opacity: 1;
+    translate: 0 0;
+    transition:
+      opacity var(--duration-enter) var(--ease-page),
+      translate var(--duration-enter) var(--ease-page);
+    transition-delay: calc(var(--i) * var(--duration-stagger));
+  }
+
+  @starting-style {
+    .site-menu[open] {
+      opacity: 0;
+    }
+
+    .site-menu[open] .menu-item {
+      opacity: 0;
+      translate: 0 var(--distance-rise);
+    }
+  }
+</style>
+
+<script>
+  // Bundled, so it runs once per visit; listeners sit on document and survive page swaps.
+  const desktop = matchMedia('(width >= 64rem)');
+  const menu = () => document.querySelector<HTMLDialogElement>('#site-menu');
+  const opener = () => document.querySelector<HTMLButtonElement>('[data-menu-open]');
+
+  const close = () => {
+    const sheet = menu();
+    if (sheet?.open) sheet.close();
+  };
+
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof Element ? event.target : null;
+    if (!target) return;
+    if (target.closest('[data-menu-open]')) {
+      menu()?.showModal();
+      opener()?.setAttribute('aria-expanded', 'true');
+    } else if (target.closest('[data-menu-close], #site-menu a')) {
+      close();
+    }
+  });
+
+  // Each page brings a new sheet, so its close listener is added per page. Escape closes it natively.
+  document.addEventListener('astro:page-load', () => {
+    menu()?.addEventListener('close', () => opener()?.setAttribute('aria-expanded', 'false'));
+  });
+
+  desktop.addEventListener('change', (event) => {
+    if (event.matches) close();
+  });
+</script>

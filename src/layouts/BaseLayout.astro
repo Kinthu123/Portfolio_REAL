@@ -1,17 +1,23 @@
 ---
 import { Font } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
+import SiteFooter from '../components/shell/SiteFooter.astro';
+import SiteHeader from '../components/shell/SiteHeader.astro';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description?: string;
   noindex?: boolean;
+  /** Header, <main>, and footer around the page. Off for /kit/, which brings its own. */
+  shell?: boolean;
 }
 
 const {
   title,
   description = 'Thu Rein Htet (Tyson), UI/UX designer who builds in code.',
   noindex = false,
+  shell = true,
 } = Astro.props;
 ---
 
@@ -20,19 +26,27 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Runs before paint: saved theme, else the system setting (spec 0002). -->
+    <!-- Runs before paint: saved theme, else the system setting (spec 0002). Page swaps bring a
+         fresh <html>, so it runs again after each one (spec 0001, "Motion lifecycle"). -->
     <script is:inline>
       (() => {
-        const root = document.documentElement;
-        let theme = null;
-        try {
-          theme = localStorage.getItem('theme');
-        } catch {}
-        if (theme !== 'light' && theme !== 'dark') {
-          theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        const apply = () => {
+          const root = document.documentElement;
+          let theme = null;
+          try {
+            theme = localStorage.getItem('theme');
+          } catch {}
+          if (theme !== 'light' && theme !== 'dark') {
+            theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          root.dataset.theme = theme;
+          root.classList.add('js');
+        };
+        apply();
+        if (!window.__themeOnSwap) {
+          window.__themeOnSwap = true;
+          document.addEventListener('astro:after-swap', apply);
         }
-        root.dataset.theme = theme;
-        root.classList.add('js');
       })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -44,8 +58,41 @@ const {
     <Font cssVariable="--font-young-serif" preload />
     <Font cssVariable="--font-source-serif" preload />
     <Font cssVariable="--font-noto-myanmar" />
+    <ClientRouter />
   </head>
   <body>
-    <slot />
+    {
+      shell ? (
+        <div class="flex min-h-dvh flex-col">
+          <a href="#main" class="skip-link">Skip to content</a>
+          <SiteHeader />
+          <main id="main" tabindex="-1" class="flex-1 outline-none">
+            <slot />
+          </main>
+          <SiteFooter />
+        </div>
+      ) : (
+        <slot />
+      )
+    }
   </body>
 </html>
+
+<style>
+  /* Hidden until focused, then shown in the top corner above the header. */
+  .skip-link {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
+    padding: 10px 16px;
+    font-weight: 600;
+    background-color: var(--color-ink);
+    color: var(--color-bg);
+    translate: 0 -200%;
+  }
+
+  .skip-link:focus-visible {
+    translate: 0 0;
+  }
+</style>

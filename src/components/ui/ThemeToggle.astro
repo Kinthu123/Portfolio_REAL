@@ -36,25 +36,28 @@ const { class: className, ...rest } = Astro.props;
 </style>
 
 <script>
+  // Runs once per visit. Page swaps replace the buttons, so clicks are caught on document
+  // and labels are refreshed on every page load.
   const root = document.documentElement;
-  const toggles = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
 
   // The label says what pressing will do.
   const label = () => {
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    toggles.forEach((button) => button.setAttribute('aria-label', `Switch to ${next} theme`));
+    document
+      .querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')
+      .forEach((button) => button.setAttribute('aria-label', `Switch to ${next} theme`));
   };
 
-  toggles.forEach((button) =>
-    button.addEventListener('click', () => {
-      const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
-      root.dataset.theme = theme;
-      try {
-        localStorage.setItem('theme', theme);
-      } catch {}
-      label();
-    }),
-  );
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element) || !event.target.closest('[data-theme-toggle]')) return;
+    const theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = theme;
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {}
+    label();
+  });
 
+  document.addEventListener('astro:page-load', label);
   label();
 </script>
