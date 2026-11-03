@@ -1,0 +1,62 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+// One link around a real picture, the title, and a meta line (spec 0002, AC-10). Square, no shadow.
+interface Props {
+  href: string;
+  title: string;
+  meta: string;
+  image: ImageMetadata;
+  alt: string;
+  level?: 2 | 3 | 4;
+}
+
+const { href, title, meta, image, alt, level = 3 } = Astro.props;
+const Heading = `h${level}` as const;
+---
+
+<a href={href} class="project-card block">
+  <div class="project-card-thumb p-4 sm:p-6">
+    <Image src={image} alt={alt} widths={[400, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" class="aspect-[3/2] w-full object-cover" />
+  </div>
+  <Heading class="project-card-title mt-4 font-display text-lead">{title}</Heading>
+  <p class="mt-1 text-small text-muted">{meta}</p>
+</a>
+
+<style>
+  .project-card {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .project-card-thumb {
+    background-color: var(--color-surface);
+    transition: background-color var(--duration-feedback) var(--ease-page);
+  }
+
+  .project-card-thumb :global(img) {
+    transition: translate var(--duration-enter) var(--ease-page);
+  }
+
+  .project-card-title {
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: var(--size-underline);
+    text-underline-offset: var(--size-underline-offset);
+    transition: text-decoration-color var(--duration-feedback) var(--ease-page);
+  }
+
+  /* Hover: the ground turns ink, the picture lifts, the title underlines. Under reduced motion the picture stays put. */
+  .project-card:hover .project-card-thumb {
+    background-color: var(--color-ink);
+  }
+
+  .project-card:hover .project-card-thumb :global(img) {
+    translate: 0 calc(var(--distance-lift) * -2);
+  }
+
+  .project-card:hover .project-card-title {
+    text-decoration-color: var(--color-accent);
+  }
+</style>

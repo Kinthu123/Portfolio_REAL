@@ -2,9 +2,11 @@
 import Button from '../../components/ui/Button.astro';
 import DesignCodeSwitch from '../../components/ui/DesignCodeSwitch.astro';
 import Field from '../../components/ui/Field.astro';
+import ProjectCard from '../../components/ui/ProjectCard.astro';
 import Link from '../../components/ui/Link.astro';
 import ThemeToggle from '../../components/ui/ThemeToggle.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import posWarehouse from '../../assets/work/pos-warehouse.jpg';
 
 // Internal reference page (spec 0002, AC-13): noindex, not linked from the site.
 const themes = ['light', 'dark'] as const;
@@ -102,6 +104,18 @@ const colours = [
               <p class="mt-3 text-small text-muted" aria-live="polite" data-kit-switch-output>
                 Showing the Figma design.
               </p>
+            </div>
+
+            <h3 class="mt-12 text-lead">Project card</h3>
+            <div class="mt-6 max-w-measure">
+              <ProjectCard
+                href="#"
+                title="Cosmetic retail POS and warehouse"
+                meta="UI/UX design · 2025"
+                image={posWarehouse}
+                alt="The Beta POS login screen open on a laptop resting on a stone block."
+                level={4}
+              />
             </div>
 
             <h3 class="mt-12 text-lead">Colour</h3>
