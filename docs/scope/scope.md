@@ -14,7 +14,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | planned |
 | 3 | Content model | Foundation | planned |
-| 4 | Design system & UI foundation | Foundation | in-progress |
+| 4 | Design system & UI foundation | Foundation | done |
 | 5 | Site shell | Skeleton | planned |
 | 6 | Home page | Journey 1 | planned |
 | 7 | POS + warehouse case study | Journey 1 | planned |

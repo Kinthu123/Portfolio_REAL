@@ -1,7 +1,7 @@
 # 0002. Design system: split stage, navy on white
 
 **Date**: 2026-11-02
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 
