@@ -51,12 +51,12 @@ The shape of every content file: case study, playground piece, certificate, serv
 ### 4. Design system & UI foundation
 The visual language, set from your references with the Taste skill, plus base components. Light and dark themes, built to WCAG AA from the start.
 **Done when:** `design.md` records the chosen direction, tokens cover type, color (light and dark), spacing, and motion, and base components (buttons, links, cards, form fields) pass AA contrast and work by keyboard.
-spec [0002](../specs/0002-design-system/index.md)
+spec [0002](../specs/0002-design-system/index.md) · code in `src/styles/global.css`, `src/components/ui/`, `design.md`
 - [x] Design it (spec): `/architect design system & UI foundation`
-- [ ] Build it: `/develop design system & UI foundation`
+- [x] Build it: `/develop design system & UI foundation`
   - [x] Fonts and tokens, light and dark, reduced motion (AC-2, AC-3, AC-4, AC-11, AC-12)
   - [x] Base pieces: buttons, links, fields, Design / Code switch, theme toggle, project cards (AC-5 to AC-10)
-  - [ ] `/kit/` page, `design.md`, Taste inspection at three widths (AC-1, AC-4, AC-13)
+  - [x] `/kit/` page, `design.md`, Taste inspection at three widths (AC-1, AC-4, AC-13)
 
 ## Skeleton
 

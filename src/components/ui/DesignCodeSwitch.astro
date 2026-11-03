@@ -4,9 +4,11 @@
 interface Props {
   value?: 'design' | 'code';
   label?: string;
+  /** For /kit/ only: shows a state on the option that is not pressed. */
+  state?: 'hover' | 'focus';
 }
 
-const { value = 'design', label = 'Show this screen as' } = Astro.props;
+const { value = 'design', label = 'Show this screen as', state } = Astro.props;
 
 const options = [
   { value: 'design', text: 'Design' },
@@ -22,6 +24,7 @@ const options = [
         class="design-code-option min-h-11 px-5 text-body font-semibold"
         aria-pressed={option.value === value ? 'true' : 'false'}
         data-value={option.value}
+        data-state={option.value !== value ? state : undefined}
       >
         {option.text}
       </button>
@@ -33,21 +36,22 @@ const options = [
   .design-code-option {
     background-color: var(--color-surface);
     color: var(--color-ink);
+    border-bottom: var(--size-ledge) solid transparent;
     cursor: pointer;
     transition:
       background-color var(--duration-feedback) var(--ease-page),
       color var(--duration-feedback) var(--ease-page),
-      box-shadow var(--duration-feedback) var(--ease-page);
+      border-color var(--duration-feedback) var(--ease-page);
   }
 
   /* Keep the focus ring above the neighbouring button. */
-  .design-code-option:focus-visible {
+  .design-code-option:is(:focus-visible, [data-state='focus']) {
     position: relative;
     z-index: 1;
   }
 
-  .design-code-option[aria-pressed='false']:hover {
-    box-shadow: inset 0 calc(var(--size-ledge) * -1) 0 0 var(--color-ink);
+  .design-code-option[aria-pressed='false']:is(:hover, [data-state='hover']) {
+    border-bottom-color: var(--color-ink);
   }
 
   .design-code-option[aria-pressed='true'] {

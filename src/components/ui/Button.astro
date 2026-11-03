@@ -37,11 +37,11 @@ const classes = [
 
 <style>
   .btn {
-    border: 2px solid transparent;
+    border: var(--size-ledge) solid transparent;
     cursor: pointer;
     transition:
       translate var(--duration-feedback) var(--ease-page),
-      box-shadow var(--duration-feedback) var(--ease-page),
+      border-color var(--duration-feedback) var(--ease-page),
       background-color var(--duration-feedback) var(--ease-page);
   }
 
@@ -57,15 +57,15 @@ const classes = [
     --ledge: var(--color-accent);
   }
 
-  /* Hover: the button lifts and leaves a ledge under it. Under reduced motion only the ledge shows. */
-  .btn:not(:disabled, [aria-disabled='true']):hover {
+  /* Hover: the button lifts and its bottom edge becomes a ledge. Under reduced motion only the ledge shows. */
+  .btn:not(:disabled, [aria-disabled='true']):is(:hover, [data-state='hover']) {
     translate: 0 calc(var(--distance-lift) * -1);
-    box-shadow: 0 var(--size-ledge) 0 0 var(--ledge);
+    border-bottom-color: var(--ledge);
   }
 
-  .btn:not(:disabled, [aria-disabled='true']):active {
+  .btn:not(:disabled, [aria-disabled='true']):is(:active, [data-state='pressed']) {
     translate: 0 0;
-    box-shadow: none;
+    border-bottom-color: transparent;
   }
 
   .btn:disabled,

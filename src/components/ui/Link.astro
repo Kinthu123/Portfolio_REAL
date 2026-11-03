@@ -34,7 +34,7 @@ const { href, arrow = false, class: className, ...rest } = Astro.props;
     text-decoration-color: currentColor;
   }
 
-  .link-inline:hover {
+  .link-inline:is(:hover, [data-state='hover']) {
     text-decoration-color: var(--color-accent);
   }
 
@@ -47,7 +47,7 @@ const { href, arrow = false, class: className, ...rest } = Astro.props;
   }
 
   /* Hover: the arrow nudges and a tangerine underline appears. Under reduced motion only the underline shows. */
-  .link-arrow:hover {
+  .link-arrow:is(:hover, [data-state='hover']) {
     text-decoration-color: var(--color-accent);
   }
 
@@ -56,7 +56,7 @@ const { href, arrow = false, class: className, ...rest } = Astro.props;
     transition: translate var(--duration-feedback) var(--ease-page);
   }
 
-  .link-arrow:hover .link-arrow-icon {
+  .link-arrow:is(:hover, [data-state='hover']) .link-arrow-icon {
     translate: var(--distance-nudge) 0;
   }
 </style>

@@ -136,7 +136,8 @@
     font-family: var(--font-myanmar);
   }
 
-  :focus-visible {
+  /* [data-state] lets /kit/ show a state without a pointer or keyboard. */
+  :is(:focus-visible, [data-state='focus']) {
     outline: 3px solid var(--color-focus);
     outline-offset: 3px;
   }
